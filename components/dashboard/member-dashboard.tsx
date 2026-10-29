@@ -1,0 +1,13 @@
+import { Clock3, CircleCheck, CircleX, WalletCards } from "lucide-react";
+import { BudgetCard } from "./budget-card";
+import { ExpenseForm } from "./expense-form";
+import type { Expense, Profile, Project } from "@/lib/types";
+import { formatCurrency, formatDate } from "@/lib/utils";
+const statusStyle = { pending: "bg-amber-50 text-amber-700", approved: "bg-emerald-50 text-emerald-700", rejected: "bg-red-50 text-red-700" };
+const statusIcon = { pending: Clock3, approved: CircleCheck, rejected: CircleX };
+export function MemberDashboard({ profile, projects, expenses }: { profile: Profile; projects: Project[]; expenses: Expense[] }) {
+  return <div className="mx-auto max-w-[1440px] px-4 py-8 md:px-7"><div className="mb-8"><p className="text-sm font-bold text-emerald-700">Member workspace</p><h1 className="mt-1 text-3xl font-black tracking-tight">Good to see you.</h1><p className="mt-1 text-slate-500">Track project funds and send your latest claim.</p></div>
+    <div className="grid items-start gap-6 xl:grid-cols-[1fr_420px]"><div className="min-w-0 space-y-7"><section><div className="mb-3 flex items-center justify-between"><h2 className="font-black">Active budgets</h2><span className="text-xs text-slate-400">{projects.length} projects</span></div><div className="grid gap-4 md:grid-cols-2">{projects.map(p => <BudgetCard key={p.id} project={p} />)}{!projects.length && <div className="card col-span-full p-8 text-center text-sm text-slate-500">No project budgets have been created yet.</div>}</div></section>
+      <section><h2 className="mb-3 font-black">My recent expenses</h2><div className="card overflow-hidden">{expenses.length ? <div className="divide-y divide-slate-100">{expenses.map(expense => { const Icon = statusIcon[expense.status]; return <div className="flex items-center gap-3 p-4" key={expense.id}><span className="grid size-10 shrink-0 place-items-center rounded-xl bg-slate-100"><WalletCards size={18} /></span><div className="min-w-0 flex-1"><p className="truncate text-sm font-bold">{expense.description}</p><p className="mt-0.5 text-xs text-slate-500">{expense.projects?.name ?? "Project"} · {formatDate(expense.submitted_at)}</p></div><div className="text-right"><p className="text-sm font-black">{formatCurrency(expense.amount)}</p><span className={`mt-1 inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-bold capitalize ${statusStyle[expense.status]}`}><Icon size={10} />{expense.status}</span></div></div>; })}</div> : <div className="p-8 text-center text-sm text-slate-500">Your submitted expenses will appear here.</div>}</div></section></div>
+      <aside className="xl:sticky xl:top-6"><ExpenseForm projects={projects} userId={profile.id} /></aside></div></div>;
+}
