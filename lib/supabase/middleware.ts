@@ -4,7 +4,8 @@ import { hasSupabaseConfig } from "@/lib/config";
 export async function updateSession(request: NextRequest) {
   if (!hasSupabaseConfig()) return NextResponse.next({ request });
   let response = NextResponse.next({ request });
-  const supabase = createServerClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!, {
+  const key = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ?? process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+  const supabase = createServerClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, key, {
     cookies: { getAll: () => request.cookies.getAll(), setAll(cookies) {
       cookies.forEach(({ name, value }) => request.cookies.set(name, value));
       response = NextResponse.next({ request });

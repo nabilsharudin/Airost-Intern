@@ -5,7 +5,7 @@ A responsive budget and expense tracker for campus societies, built with Next.js
 ## 1. Create the Supabase backend
 
 1. Create a free Supabase project.
-2. Open **SQL Editor**, paste [`supabase/schema.sql`](supabase/schema.sql), and run it once.
+2. Authenticate and link the Supabase CLI, then deploy [`supabase/migrations/20261105153555_initial_club_budget_schema.sql`](supabase/migrations/20261105153555_initial_club_budget_schema.sql) with `npx supabase db push --remote`.
 3. Promote the first treasurer after they sign up:
 
    ```sql
@@ -22,7 +22,7 @@ npm install
 npm run dev
 ```
 
-Fill `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` from **Supabase → Project Settings → API**. Never put the service-role key in a browser environment variable.
+Fill `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` from **Supabase → Project Settings → API**. Never put a secret or service-role key in a browser environment variable.
 
 ### Preview without Supabase
 
@@ -41,7 +41,7 @@ components/
   dashboard/                 Member and treasurer workspaces
   ui/                        Reusable shadcn-style primitives
 lib/supabase/                Browser, server, and middleware clients
-supabase/schema.sql          Complete PostgreSQL + RLS setup
+supabase/migrations/         Versioned PostgreSQL + RLS changes
 ```
 
 Receipt objects remain private. The UI stores only the object path in `expenses.receipt_url` and produces short-lived signed URLs for authorized viewers.
